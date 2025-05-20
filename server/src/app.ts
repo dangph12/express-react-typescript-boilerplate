@@ -4,9 +4,11 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { Request, Response } from 'express';
 import connectDB from './config/db';
-import quizRoutes from './module/quiz/quizRoutes';
+import router from './routes/router';
+import passport from 'passport';
+import configurePassport from './utils/passport';
+
 dotenv.config();
 
 const app = express();
@@ -26,10 +28,9 @@ app.use(
   })
 );
 
-app.use('/api/quizzes', quizRoutes);
+configurePassport();
+app.use(passport.initialize());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to Express & TypeScript Server');
-});
+app.use('/api', router);
 
 export default app;

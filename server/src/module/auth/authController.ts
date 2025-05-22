@@ -2,24 +2,30 @@ import { Request, Response } from 'express';
 import UserModel from '../user/userModel';
 import { generateToken, verifyToken } from '~/utils/jwt';
 import { comparePassword } from '~/utils/bcrypt';
+import { apiResponse } from '~/types/apiResponse';
 
 const authController = {
   async register(req: Request, res: Response) {
-    const { email, password } = req.body;
+    const { username, email, password } = req.body;
 
     try {
       const existingUser = await UserModel.findOne({
         email: email
       });
       if (existingUser) {
-        return res.status(400).json({
-          message: 'User already exists'
-        });
+        return res.status(400).json(apiResponse.failed('User already exists'));
       }
+
       const newUser = await UserModel.create({
+        username,
         email,
         password
       });
+
+      if (!newUser) {
+        return res.status(400).json(apiResponse.failed('User creation failed'));
+      }
+
       const { accessToken, refreshToken } = generateToken(
         newUser.id.toString()
       );
@@ -30,19 +36,18 @@ const authController = {
         sameSite: 'strict'
       });
 
-      return res.status(201).json({
-        message: 'User created successfully',
-        accessToken: accessToken,
-        user: {
-          id: newUser.id,
-          email: newUser.email
-        }
-      });
+      return res.status(201).json(
+        apiResponse.success('User created successfully', {
+          accessToken: accessToken,
+          user: {
+            id: newUser.id,
+            email: newUser.email
+          }
+        })
+      );
     } catch (error) {
-      console.error('Error creating user:', error);
-      return res.status(500).json({
-        message: 'Internal server error'
-      });
+      console.error('Error registering user:', error);
+      return res.status(500).json(apiResponse.error('Internal server error'));
     }
   },
 
@@ -54,16 +59,16 @@ const authController = {
         email: email
       });
       if (!user) {
-        return res.status(400).json({
-          message: 'Invalid email or password'
-        });
+        return res
+          .status(400)
+          .json(apiResponse.failed('Invalid email or password'));
       }
 
       const isPasswordValid = await comparePassword(password, user.password);
       if (!isPasswordValid) {
-        return res.status(400).json({
-          message: 'Invalid email or password'
-        });
+        return res
+          .status(400)
+          .json(apiResponse.failed('Invalid email or password'));
       }
 
       const { accessToken, refreshToken } = generateToken(user.id.toString());
@@ -74,19 +79,18 @@ const authController = {
         sameSite: 'strict'
       });
 
-      return res.status(200).json({
-        message: 'Login successful',
-        accessToken: accessToken,
-        user: {
-          id: user.id,
-          email: user.email
-        }
-      });
+      return res.status(200).json(
+        apiResponse.success('Login successful', {
+          accessToken: accessToken,
+          user: {
+            id: user.id,
+            email: user.email
+          }
+        })
+      );
     } catch (error) {
       console.error('Error logging in:', error);
-      return res.status(500).json({
-        message: 'Internal server error'
-      });
+      return res.status(500).json(apiResponse.error('Internal server error'));
     }
   },
   async logout(req: Request, res: Response) {
@@ -96,23 +100,19 @@ const authController = {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict'
       });
-      return res.status(200).json({
-        message: 'Logout successful'
-      });
+      return res.status(200).json(apiResponse.success('Logout successful'));
     } catch (error) {
       console.error('Error logging out:', error);
-      return res.status(500).json({
-        message: 'Internal server error'
-      });
+      return res.status(500).json(apiResponse.error('Internal server error'));
     }
   },
   async refreshToken(req: Request, res: Response) {
     const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
-      return res.status(401).json({
-        message: 'No refresh token provided'
-      });
+      return res
+        .status(401)
+        .json(apiResponse.failed('No refresh token provided'));
     }
 
     try {
@@ -121,14 +121,14 @@ const authController = {
 
       const newAccessToken = generateToken(userId);
 
-      return res.status(200).json({
-        accessToken: newAccessToken
-      });
+      return res.status(200).json(
+        apiResponse.success('Token refreshed successfully', {
+          accessToken: newAccessToken
+        })
+      );
     } catch (error) {
       console.error('Error refreshing token:', error);
-      return res.status(401).json({
-        message: 'Invalid refresh token'
-      });
+      return res.status(401).json(apiResponse.failed('Invalid refresh token'));
     }
   }
 };

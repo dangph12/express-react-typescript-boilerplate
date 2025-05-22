@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
@@ -7,6 +7,7 @@ import connectDB from './config/db';
 import router from './routes/router';
 import passport from 'passport';
 import configurePassport from './utils/passport';
+import { apiResponse } from './types/apiResponse';
 
 dotenv.config();
 
@@ -30,5 +31,9 @@ configurePassport();
 app.use(passport.initialize());
 
 app.use('/api', router);
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(404).json(apiResponse.error('Not Found'));
+});
 
 export default app;

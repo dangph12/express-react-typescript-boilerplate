@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import connectDB from './config/db';
+import connectDB from './configs/db';
 import router from './routes/router';
 import passport from 'passport';
 import configurePassport from './utils/passport';

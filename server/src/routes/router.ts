@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
-import quizRoutes from '~/module/quiz/quizRoute';
-import authRoutes from '~/module/auth/authRoute';
+import quizRoutes from '~/modules/quiz/quizRoute';
+import authRoutes from '~/modules/auth/authRoute';
 
 const router = Router();
 // Non-auth routes

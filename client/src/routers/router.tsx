@@ -4,16 +4,6 @@ import PrivateRoutes from '../components/privateRoutes';
 
 const QuizLayout = lazy(() => import('../layouts/quizLayout'));
 
-const ProtectedQuizLayout = () => {
-  return (
-    <PrivateRoutes role='admin'>
-      <Suspense fallback={<div>Loading layout...</div>}>
-        <QuizLayout />
-      </Suspense>
-    </PrivateRoutes>
-  );
-};
-
 const router = createBrowserRouter([
   {
     Component: lazy(() => import('../layouts/mainLayout')),
@@ -39,7 +29,13 @@ const router = createBrowserRouter([
   },
   {
     path: '/quizzes',
-    Component: ProtectedQuizLayout,
+    Component: () => (
+      <PrivateRoutes>
+        <Suspense fallback={<div>Loading layout...</div>}>
+          <QuizLayout />
+        </Suspense>
+      </PrivateRoutes>
+    ),
     children: [
       {
         path: '',

@@ -26,7 +26,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string>('');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+
+  // Set loading state to true initially
+  // Because we need to wait for the auth initialization
+  const [loading, setLoading] = useState<boolean>(true);
 
   const isTokenExpired = (token: string): boolean => {
     if (!token) return true;
@@ -133,8 +136,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const initAuth = async () => {
-      console.log('Initializing authentication...');
-      setLoading(true);
       const savedToken =
         localStorage.getItem('accessToken') ||
         sessionStorage.getItem('accessToken');
@@ -150,12 +151,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setLoading(false);
             return;
           }
+        } else {
+          setAccessToken(savedToken);
+          setIsAuthenticated(true);
+          const decodedUser = jwtDecode<User>(savedToken);
+          setUser(decodedUser);
         }
-
-        setAccessToken(savedToken);
-        setIsAuthenticated(true);
-        const decodedUser = jwtDecode<User>(savedToken);
-        setUser(decodedUser);
       } catch (error) {
         console.error('Error initializing auth:', error);
       } finally {

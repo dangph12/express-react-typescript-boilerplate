@@ -11,10 +11,21 @@ const configurePassport = () => {
   passport.use(
     new JwtStrategy(options, async (jwtPayload, done) => {
       try {
-        const user = await UserModel.findById(jwtPayload.id);
+        const userId =
+          jwtPayload.id ||
+          jwtPayload._id ||
+          jwtPayload.userId ||
+          jwtPayload.sub;
+
+        if (!userId) {
+          return done(null, false);
+        }
+
+        const user = await UserModel.findById(userId);
         if (!user) {
           return done(null, false);
         }
+
         return done(null, user);
       } catch (error) {
         return done(error, false);

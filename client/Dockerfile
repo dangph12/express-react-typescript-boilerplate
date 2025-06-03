@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 
-FROM --platform=$BUILDPLATFORM node:20-bookworm-slim AS development
+FROM --platform=$BUILDPLATFORM node:24.1.0-slim AS development
 
 WORKDIR /code
 COPY package.json /code/package.json
@@ -17,15 +17,11 @@ ENV NODE_ENV=${NODE_ENV}
 
 RUN npm run build
 
-FROM nginx:1.27.3-alpine-slim
+FROM nginx:1.28.0-alpine-slim
 
 COPY --from=build /code/dist /var/www/dist/
-
 COPY --from=build /code/nginx.conf /etc/nginx/nginx.conf
 
-# Copy the externalized entrypoint script
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
 EXPOSE 80
-ENTRYPOINT ["/docker-entrypoint.sh"]
+
+CMD ["nginx", "-g", "daemon off;"]

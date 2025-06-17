@@ -1,6 +1,8 @@
+import type { LoginFormFields } from './login';
+import type { RegisterFormFields } from './register';
 import type { User } from './user';
 
-export type AuthToken = {
+export type Auth = {
   accessToken: string;
   setAccessToken: (token: string) => void;
   isAuthenticated: boolean;
@@ -12,10 +14,8 @@ export type AuthToken = {
   isTokenExpired: (token: string) => boolean;
   refreshToken: () => Promise<string | null>;
   logout: () => Promise<void>;
-  login: (username: string, password: string) => Promise<void>;
-  register: (
-    username: string,
-    email: string,
-    password: string
-  ) => Promise<void>;
+  login: (data: LoginFormFields) => Promise<void>;
+
+  // Change name to signUp because register is a keyword in react-hook-form
+  signUp: (data: RegisterFormFields) => Promise<void>;
 };

@@ -1,10 +1,12 @@
 import { createContext, useState, useEffect } from 'react';
-import type { AuthToken } from '../types/authToken';
+import type { Auth } from '../types/auth';
 import type { User } from '../types/user';
 import { jwtDecode } from 'jwt-decode';
 import axiosInstance from '../config/axiosConfig';
+import type { RegisterFormFields } from '~/types/register';
+import type { LoginFormFields } from '~/types/login';
 
-const initialAuthToken: AuthToken = {
+const initialAuthToken: Auth = {
   accessToken: '',
   setAccessToken: () => {},
   isAuthenticated: false,
@@ -17,10 +19,10 @@ const initialAuthToken: AuthToken = {
   refreshToken: async () => null,
   logout: async () => {},
   login: async () => {},
-  register: async () => {}
+  signUp: async () => {}
 };
 
-export const AuthContext = createContext<AuthToken>(initialAuthToken);
+export const AuthContext = createContext<Auth>(initialAuthToken);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string>('');
@@ -47,7 +49,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshToken = async () => {
     try {
-      const response = await axiosInstance.post('/auth/refresh-token');
+      const response = await axiosInstance.post('/api/auth/refresh-token');
       const newToken = response.data.accessToken;
 
       if (localStorage.getItem('accessToken')) {
@@ -68,15 +70,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const login = async (email: string, password: string) => {
+  const login = async (data: LoginFormFields) => {
     try {
-      const response = await axiosInstance.post('/api/auth/login', {
-        email,
-        password
-      });
+      const response = await axiosInstance.post('/api/auth/login', data);
       const { accessToken } = response.data.data;
 
-      if (localStorage.getItem('accessToken')) {
+      if (data.rememberMe) {
         localStorage.setItem('accessToken', accessToken);
       } else {
         sessionStorage.setItem('accessToken', accessToken);
@@ -92,17 +91,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const register = async (
-    username: string,
-    email: string,
-    password: string
-  ) => {
+  const signUp = async (data: RegisterFormFields) => {
     try {
-      const response = await axiosInstance.post('/api/auth/register', {
-        username,
-        email,
-        password
-      });
+      const response = await axiosInstance.post('/api/auth/register', data);
       const { accessToken } = response.data.data;
 
       if (localStorage.getItem('accessToken')) {
@@ -128,7 +119,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem('accessToken');
     sessionStorage.removeItem('accessToken');
     try {
-      await axiosInstance.post('/auth/logout', {}, { withCredentials: true });
+      await axiosInstance.post(
+        '/api/auth/logout',
+        {},
+        { withCredentials: true }
+      );
     } catch (error) {
       console.error('Error during logout:', error);
     }
@@ -182,7 +177,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         refreshToken,
         logout,
         login,
-        register
+        signUp
       }}
     >
       {children}

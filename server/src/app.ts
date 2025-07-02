@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
@@ -33,7 +33,8 @@ app.use(passport.initialize());
 
 app.use('/api', router);
 
-app.use((req: Request, res: Response, next: NextFunction) => {
+// Not found handler
+app.use((req: Request, res: Response) => {
   const message = `API route [${req.method}] ${req.originalUrl} not found`;
   res.status(404).json(apiResponse.failed(message));
 });

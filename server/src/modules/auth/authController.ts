@@ -59,18 +59,11 @@ const authController = {
         sameSite: 'strict'
       });
 
-      return res.status(201).json(
-        apiResponse.success('User created successfully', {
-          accessToken,
-          user: {
-            id: newUser.id,
-            fullName: newUser.fullName,
-            email: newUser.email,
-            username: newUser.username,
-            phoneNumber: newUser.phoneNumber
-          }
-        })
-      );
+      return res
+        .status(201)
+        .json(
+          apiResponse.success('User created successfully', { accessToken })
+        );
     } catch (error) {
       next(error);
     }
@@ -103,15 +96,9 @@ const authController = {
         sameSite: 'strict'
       });
 
-      return res.status(200).json(
-        apiResponse.success('Login successful', {
-          accessToken,
-          user: {
-            id: user.id,
-            email: user.email
-          }
-        })
-      );
+      return res
+        .status(200)
+        .json(apiResponse.success('Login successful', { accessToken }));
     } catch (error) {
       next(error);
     }
@@ -147,18 +134,22 @@ const authController = {
         throw createHttpError(401, 'No refresh token provided');
 
       const decoded = verifyRefreshToken(refreshToken);
-      const id = typeof decoded === 'string' ? decoded : decoded.id;
+      if (!decoded) throw createHttpError(401, 'Invalid refresh token');
+
+      if (typeof decoded === 'string' || !decoded.id || !decoded.role) {
+        throw createHttpError(401, 'Invalid refresh token payload');
+      }
 
       const { accessToken } = generateToken({
-        id: id,
-        role: (decoded as { role: string }).role
+        id: decoded.id,
+        role: decoded.role
       });
 
-      return res.status(200).json(
-        apiResponse.success('Token refreshed successfully', {
-          accessToken: accessToken
-        })
-      );
+      return res
+        .status(200)
+        .json(
+          apiResponse.success('Token refreshed successfully', { accessToken })
+        );
     } catch (error) {
       next(error);
     }

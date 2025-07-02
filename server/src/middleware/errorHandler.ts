@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
+import { Request, Response, ErrorRequestHandler } from 'express';
 import { apiResponse } from '~/types/apiResponse';
+import isHttpError from 'http-errors';
 
 export const errorHandler: ErrorRequestHandler = (
-  err: any,
+  err: isHttpError.HttpError | Error,
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ): void => {
-  const status = err.status || 500;
+  const status = isHttpError.isHttpError(err) ? err.status : 500;
 
   if (status >= 400 && status < 500) {
     const message = err.message || 'Client Error';

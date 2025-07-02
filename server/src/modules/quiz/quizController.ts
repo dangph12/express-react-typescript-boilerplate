@@ -1,5 +1,7 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import QuizModel from './quizModel';
+import { apiResponse } from '~/types/apiResponse';
+import createHttpError from 'http-errors';
 
 /**
  * quizController.ts
@@ -10,48 +12,56 @@ export default {
   /**
    * quizController.list()
    */
-  list: async function (req: Request, res: Response): Promise<Response> {
+  list: async function (
+    _req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     try {
       const quizzes = await QuizModel.find();
-      return res.json(quizzes);
-    } catch (err: Error | unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      return res.status(500).json({
-        message: 'Error when getting quiz.',
-        error: errorMessage
-      });
+      if (!quizzes || quizzes.length === 0) {
+        throw createHttpError(404, 'No quizzes found');
+      }
+
+      return res
+        .status(200)
+        .json(apiResponse.success('Quizzes retrieved successfully', quizzes));
+    } catch (err) {
+      next(err);
     }
   },
 
   /**
    * quizController.show()
    */
-  show: async function (req: Request, res: Response): Promise<Response> {
+  show: async function (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     const id = req.params.id;
 
     try {
       const quiz = await QuizModel.findById(id);
-
       if (!quiz) {
-        return res.status(404).json({
-          message: 'No such quiz'
-        });
+        throw createHttpError(404, 'No such quiz');
       }
-
-      return res.json(quiz);
+      return res
+        .status(200)
+        .json(apiResponse.success('Quiz retrieved successfully', quiz));
     } catch (err: Error | unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      return res.status(500).json({
-        message: 'Error when creating quiz',
-        error: errorMessage
-      });
+      next(err);
     }
   },
 
   /**
    * quizController.create()
    */
-  create: async function (req: Request, res: Response): Promise<Response> {
+  create: async function (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     const quiz = new QuizModel({
       title: req.body.title,
       description: req.body.description,
@@ -60,20 +70,22 @@ export default {
 
     try {
       const savedQuiz = await quiz.save();
-      return res.status(201).json(savedQuiz);
+      return res
+        .status(201)
+        .json(apiResponse.success('Quiz created successfully', savedQuiz));
     } catch (err: Error | unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      return res.status(500).json({
-        message: 'Error when creating quiz',
-        error: errorMessage
-      });
+      next(err);
     }
   },
 
   /**
    * quizController.update()
    */
-  update: async function (req: Request, res: Response): Promise<Response> {
+  update: async function (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     const id = req.params.id;
 
     try {
@@ -82,42 +94,38 @@ export default {
         runValidators: true
       });
       if (!quiz) {
-        return res.status(404).json({
-          message: 'No such quiz'
-        });
+        throw createHttpError(404, 'No such quiz');
       }
-      return res.json(quiz);
+      return res
+        .status(200)
+        .json(apiResponse.success('Quiz updated successfully', quiz));
     } catch (err: Error | unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      return res.status(500).json({
-        message: 'Error when updating quiz.',
-        error: errorMessage
-      });
+      next(err);
     }
   },
 
   /**
    * quizController.remove()
    */
-  remove: async function (req: Request, res: Response): Promise<Response> {
+  remove: async function (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     const id = req.params.id;
 
     try {
       const result = await QuizModel.findByIdAndDelete(id);
       if (!result) {
-        return res.status(404).json({
-          message: 'No such quiz'
-        });
+        throw createHttpError(404, 'No such quiz');
       }
-      return res.json({
-        message: 'Quiz deleted successfully'
-      });
+      return res
+        .status(200)
+        .json(
+          apiResponse.success('Quiz deleted successfully', { id: result.id })
+        );
     } catch (err: Error | unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      return res.status(500).json({
-        message: 'Error when deleting the quiz.',
-        error: errorMessage
-      });
+      next(err);
     }
   }
 };

@@ -1,6 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { hashPassword } from '~/utils/bcrypt';
-import CartModel from '../cart/cartModel';
 // Line removed as it is unused.
 
 export interface IUser extends Document {
@@ -11,7 +10,7 @@ export interface IUser extends Document {
   password: string;
   avatarUrl?: string;
   coverUrl?: string;
-  role: 'admin' | 'customer' | 'shop';
+  role: string;
   addresses?: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
@@ -63,21 +62,6 @@ userSchema.pre<IUser>('save', async function (next) {
     this.password = await hashPassword(this.password);
   }
   next();
-});
-
-userSchema.post('save', async (doc: IUser, next) => {
-  try {
-    if (doc.role === 'customer') {
-      await CartModel.updateOne(
-        { userId: doc._id },
-        { $setOnInsert: { userId: doc._id, items: [] } },
-        { upsert: true }
-      );
-    }
-    next();
-  } catch (error) {
-    next(error as Error);
-  }
 });
 
 export default mongoose.model<IUser>('User', userSchema);

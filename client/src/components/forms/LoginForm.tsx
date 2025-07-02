@@ -31,7 +31,7 @@ const LoginForm = () => {
       <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
         <div className='form-control w-full'>
           <label className='label'>
-            <span className='label-text'>Email</span>
+            <span className='label-text text-primary'>Email</span>
           </label>
           <input
             type='email'
@@ -39,17 +39,15 @@ const LoginForm = () => {
             {...register('email')}
             className={`input w-full ${errors.email ? 'input-error' : ''}`}
           />
-          {errors.email && (
-            <label className='label'>
-              <span className='label-text-alt text-error'>
-                {errors.email.message}
-              </span>
-            </label>
-          )}
+          <div className='h-6 flex items-start'>
+            <span className='label-text-alt text-error text-sm'>
+              {errors.email?.message || ''}
+            </span>
+          </div>
         </div>
         <div className='form-control w-full'>
           <label className='label'>
-            <span className='label-text'>Password</span>
+            <span className='label-text text-primary'>Password</span>
           </label>
           <input
             type='password'
@@ -57,13 +55,11 @@ const LoginForm = () => {
             {...register('password')}
             className={`input w-full ${errors.password ? 'input-error' : ''}`}
           />
-          {errors.password && (
-            <label className='label'>
-              <span className='label-text-alt text-error'>
-                {errors.password.message}
-              </span>
-            </label>
-          )}
+          <div className='h-6 flex items-start'>
+            <span className='label-text-alt text-error text-sm'>
+              {errors.password?.message || ''}
+            </span>
+          </div>
         </div>
 
         <div className='form-control w-full'>
@@ -73,7 +69,7 @@ const LoginForm = () => {
               className='checkbox checkbox-primary'
               {...register('rememberMe')}
             />
-            <span className='label-text'>Remember me</span>
+            <span className='label-text text-primary'>Remember me</span>
           </label>
         </div>
         <button className='btn btn-primary w-full' type='submit'>

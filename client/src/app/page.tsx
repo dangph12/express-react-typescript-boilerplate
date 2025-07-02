@@ -7,7 +7,7 @@ const LandingPage = () => {
         <button className='btn btn-primary'>Login</button>
       </NavLink>
       <NavLink to='/auth/register'>
-        <button className='btn btn-active'>Register</button>
+        <button className='btn btn-secondary'>Register</button>
       </NavLink>
     </>
   );

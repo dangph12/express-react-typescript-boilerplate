@@ -35,121 +35,111 @@ const RegisterForm = () => {
   return (
     <div>
       <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
-        <div className='form-control w-full'>
-          <label className='label'>
-            <span className='label-text'>Fullname</span>
-          </label>
-          <input
-            type='text'
-            placeholder='Fullname'
-            {...register('fullName')}
-            className={`input w-full ${errors.fullName ? 'input-error' : ''}`}
-          />
-          {errors.fullName && (
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <div className='form-control w-full'>
             <label className='label'>
-              <span className='label-text-alt text-error'>
-                {errors.fullName.message}
-              </span>
+              <span className='label-text text-primary'>Fullname</span>
             </label>
-          )}
+            <input
+              type='text'
+              placeholder='Fullname'
+              {...register('fullName')}
+              className={`input w-full ${errors.fullName ? 'input-error' : ''}`}
+            />
+            <div className='h-6 flex items-start'>
+              <span className='label-text-alt text-error text-sm'>
+                {errors.fullName?.message || ''}
+              </span>
+            </div>
+          </div>
+
+          <div className='form-control w-full'>
+            <label className='label'>
+              <span className='label-text text-primary'>Username</span>
+            </label>
+            <input
+              type='text'
+              placeholder='Username'
+              {...register('username')}
+              className={`input w-full ${errors.username ? 'input-error' : ''}`}
+            />
+            <div className='h-6 flex items-start'>
+              <span className='label-text-alt text-error text-sm'>
+                {errors.username?.message || ''}
+              </span>
+            </div>
+          </div>
+
+          <div className='form-control w-full'>
+            <label className='label'>
+              <span className='label-text text-primary'>Email</span>
+            </label>
+            <input
+              type='email'
+              placeholder='Email'
+              {...register('email')}
+              className={`input w-full ${errors.email ? 'input-error' : ''}`}
+            />
+            <div className='h-6 flex items-start'>
+              <span className='label-text-alt text-error text-sm'>
+                {errors.email?.message || ''}
+              </span>
+            </div>
+          </div>
+
+          <div className='form-control w-full'>
+            <label className='label'>
+              <span className='label-text text-primary'>Phone</span>
+            </label>
+            <input
+              type='text'
+              placeholder='Phone number'
+              {...register('phoneNumber')}
+              className={`input w-full ${errors.phoneNumber ? 'input-error' : ''}`}
+            />
+            <div className='h-6 flex items-start'>
+              <span className='label-text-alt text-error text-sm'>
+                {errors.phoneNumber?.message || ''}
+              </span>
+            </div>
+          </div>
+
+          <div className='form-control w-full'>
+            <label className='label'>
+              <span className='label-text text-primary'>Password</span>
+            </label>
+            <input
+              type='password'
+              placeholder='Password'
+              {...register('password')}
+              className={`input w-full ${errors.password ? 'input-error' : ''}`}
+            />
+            <div className='h-6 flex items-start'>
+              <span className='label-text-alt text-error text-sm'>
+                {errors.password?.message || ''}
+              </span>
+            </div>
+          </div>
+
+          <div className='form-control w-full'>
+            <label className='label'>
+              <span className='label-text text-primary'>Confirm Password</span>
+            </label>
+            <input
+              type='password'
+              placeholder='Confirm Password'
+              {...register('confirmPassword')}
+              className={`input w-full ${errors.confirmPassword ? 'input-error' : ''}`}
+            />
+            <div className='h-6 flex items-start'>
+              <span className='label-text-alt text-error text-sm'>
+                {errors.confirmPassword?.message || ''}
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div className='form-control w-full'>
-          <label className='label'>
-            <span className='label-text'>Username</span>
-          </label>
-          <input
-            type='text'
-            placeholder='Username'
-            {...register('username')}
-            className={`input w-full ${errors.username ? 'input-error' : ''}`}
-          />
-          {errors.username && (
-            <label className='label'>
-              <span className='label-text-alt text-error'>
-                {errors.username.message}
-              </span>
-            </label>
-          )}
-        </div>
-
-        <div className='form-control w-full'>
-          <label className='label'>
-            <span className='label-text'>Email</span>
-          </label>
-          <input
-            type='email'
-            placeholder='Email'
-            {...register('email')}
-            className={`input w-full ${errors.email ? 'input-error' : ''}`}
-          />
-          {errors.email && (
-            <label className='label'>
-              <span className='label-text-alt text-error'>
-                {errors.email.message}
-              </span>
-            </label>
-          )}
-        </div>
-
-        <div className='form-control w-full'>
-          <label className='label'>
-            <span className='label-text'>Phone</span>
-          </label>
-          <input
-            type='text'
-            placeholder='Phone number'
-            {...register('phoneNumber')}
-            className={`input w-full ${errors.phoneNumber ? 'input-error' : ''}`}
-          />
-          {errors.phoneNumber && (
-            <label className='label'>
-              <span className='label-text-alt text-error'>
-                {errors.phoneNumber.message}
-              </span>
-            </label>
-          )}
-        </div>
-
-        <div className='form-control w-full'>
-          <label className='label'>
-            <span className='label-text'>Password</span>
-          </label>
-          <input
-            type='password'
-            placeholder='Password'
-            {...register('password')}
-            className={`input w-full ${errors.password ? 'input-error' : ''}`}
-          />
-          {errors.password && (
-            <label className='label'>
-              <span className='label-text-alt text-error'>
-                {errors.password.message}
-              </span>
-            </label>
-          )}
-        </div>
-
-        <div className='form-control w-full'>
-          <label className='label'>
-            <span className='label-text'>Confirm Password</span>
-          </label>
-          <input
-            type='password'
-            placeholder='Confirm Password'
-            {...register('confirmPassword')}
-            className={`input w-full ${errors.confirmPassword ? 'input-error' : ''}`}
-          />
-          {errors.confirmPassword && (
-            <label className='label'>
-              <span className='label-text-alt text-error'>
-                {errors.confirmPassword.message}
-              </span>
-            </label>
-          )}
-        </div>
-
-        <button className='btn btn-primary w-full' type='submit'>
+        <button className='btn btn-primary w-full mt-4' type='submit'>
           {isSubmitting ? 'Registering...' : 'Register'}
         </button>
       </form>

@@ -3,7 +3,7 @@
   "bracketSameLine": false,
   "bracketSpacing": true,
   "embeddedLanguageFormatting": "auto",
-  "endOfLine": "crlf",
+  "endOfLine": "lf",
   "experimentalTernaries": false,
   "htmlWhitespaceSensitivity": "css",
   "insertPragma": false,

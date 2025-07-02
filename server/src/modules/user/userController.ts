@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
-import crypto from 'crypto';
+import CryptoJS from 'crypto-js';
 import UserModel from './userModel';
 import { apiResponse } from '~/types/apiResponse';
 import { comparePassword } from '~/utils/bcrypt';
@@ -104,7 +104,7 @@ export const userController = {
         throw createHttpError(409, 'Phone number already exists');
       }
 
-      const password = crypto.randomBytes(4).toString('hex');
+      const password = CryptoJS.lib.WordArray.random(4).toString();
 
       const newUser = await UserModel.create({
         fullName,

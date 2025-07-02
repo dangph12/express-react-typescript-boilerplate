@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:24.1.0-slim AS development
+FROM --platform=$BUILDPLATFORM node:24.3.0-alpine AS development
 
 WORKDIR /code
 COPY package.json /code/package.json

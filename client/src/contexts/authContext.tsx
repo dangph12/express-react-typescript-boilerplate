@@ -6,7 +6,7 @@ import axiosInstance from '../config/axiosConfig';
 import type { RegisterFormFields } from '~/types/register';
 import type { LoginFormFields } from '~/types/login';
 
-const initialAuthToken: Auth = {
+const initialAuth: Auth = {
   accessToken: '',
   setAccessToken: () => {},
   isAuthenticated: false,
@@ -22,7 +22,7 @@ const initialAuthToken: Auth = {
   signUp: async () => {}
 };
 
-export const AuthContext = createContext<Auth>(initialAuthToken);
+export const AuthContext = createContext<Auth>(initialAuth);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string>('');
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const refreshToken = async () => {
     try {
       const response = await axiosInstance.post('/api/auth/refresh-token');
-      const newToken = response.data.accessToken;
+      const { accessToken: newToken } = response.data.data;
 
       if (localStorage.getItem('accessToken')) {
         localStorage.setItem('accessToken', newToken);
@@ -136,20 +136,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         sessionStorage.getItem('accessToken');
       try {
         if (!savedToken) {
-          setLoading(false);
-          return;
+          await refreshToken();
         }
 
-        if (isTokenExpired(savedToken)) {
-          const newToken = await refreshToken();
-          if (!newToken) {
-            setLoading(false);
-            return;
-          }
+        if (isTokenExpired(savedToken || '')) {
+          await refreshToken();
         } else {
-          setAccessToken(savedToken);
+          setAccessToken(savedToken || '');
           setIsAuthenticated(true);
-          const decodedUser = jwtDecode<User>(savedToken);
+          const decodedUser = jwtDecode<User>(savedToken || '');
           setUser(decodedUser);
         }
       } catch (error) {

@@ -20,7 +20,6 @@ const LoginForm = () => {
       await login(data);
       alert('Login successful! Redirecting to dashboard...');
       reset();
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: Error | unknown) {
       alert('Login failed. Please check your credentials and try again.');
     }

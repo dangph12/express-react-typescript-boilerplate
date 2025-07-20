@@ -5,7 +5,6 @@ import UserModel from './userModel';
 import { apiResponse } from '~/types/apiResponse';
 import { comparePassword } from '~/utils/bcrypt';
 import createHttpError from 'http-errors';
-// import { sendMail } from '~/utils/mailer';   // Giả sử bạn có util gửi mail
 
 /**
  * userController.ts
@@ -104,23 +103,20 @@ export const userController = {
         throw createHttpError(409, 'Phone number already exists');
       }
 
-      const password = CryptoJS.lib.WordArray.random(4).toString();
+      const generatedPassword = CryptoJS.lib.WordArray.random(4).toString();
 
       const newUser = await UserModel.create({
         fullName,
         username,
         email,
         phoneNumber,
-        password,
+        password: generatedPassword,
         role
       });
 
       if (!newUser) {
         throw createHttpError(400, 'User creation failed');
       }
-
-      /* ---- TODO: gửi email/notify password cho user ---- */
-      // await sendMail({ ... })
 
       const { password: _pw, ...resUser } = newUser.toObject();
 

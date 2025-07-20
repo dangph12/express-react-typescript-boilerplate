@@ -1,4 +1,4 @@
-export interface ApiResponseType<T = any> {
+export interface ApiResponseType<T = unknown> {
   status: 'success' | 'failed' | 'error';
   message: string;
   data?: T;

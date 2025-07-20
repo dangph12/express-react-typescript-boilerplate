@@ -26,7 +26,6 @@ const RegisterForm = () => {
         'Registration successful! Please check your email to verify your account.'
       );
       reset();
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: Error | unknown) {
       alert('Registration failed. Please try again later.');
     }

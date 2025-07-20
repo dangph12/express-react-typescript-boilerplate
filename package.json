@@ -1,5 +1,5 @@
 {
-  "name": "flower-ecommerce",
+  "name": "express-react-typescript-boilerplate",
   "version": "1.0.0",
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx,.js,.mjs",

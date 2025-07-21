@@ -9,7 +9,7 @@ export default tseslint.config(
     ignores: ['**/node_modules/', '**/dist/', '**/build/']
   },
   {
-    files: ['**/*.{js,mjs,cjs,ts,tsx}'],
+    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     languageOptions: {
       ecmaVersion: 2020,
@@ -36,20 +36,20 @@ export default tseslint.config(
     }
   },
   {
-    files: ['client/**/*.{ts,tsx}'],
+    files: ['client/**/*.{js,jsx,ts,tsx}'],
+    extends: [
+      js.configs.recommended,
+      reactHooks.configs['recommended-latest'],
+      reactRefresh.configs.vite
+    ],
     languageOptions: {
-      globals: globals.browser
-    },
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh
-    },
-    rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true }
-      ]
+      ecmaVersion: 2020,
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module'
+      }
     }
   }
 );

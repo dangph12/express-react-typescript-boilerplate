@@ -1,17 +1,14 @@
 import { Router } from 'express';
-import authRoutes from '~/modules/auth/authRoute';
-import userRoute from '~/modules/user/userRoute';
-import quizRoutes from '~/modules/quiz/quizRoute';
+import authRoutes from '~/modules/auth/auth-route';
+import userRoute from '~/modules/user/user-route';
 import { authorize } from '~/middleware/authorize';
-import jwtAuth from '~/middleware/jwtAuth';
+import jwtAuth from '~/middleware/jwt-auth';
 
 const router = Router();
 // Non-auth routes
 router.use('/auth', authRoutes);
-router.use('/quizzes', quizRoutes);
 
 // Auth routes
-
-router.use('/users', jwtAuth, authorize('admin'), userRoute);
+router.use('/users', jwtAuth, authorize(['admin']), userRoute);
 
 export default router;

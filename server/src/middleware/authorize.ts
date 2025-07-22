@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import createHttpError from 'http-errors';
-import { IUser } from '~/modules/user/userModel';
+import { IUser } from '~/modules/user/user-model';
 
 export const authorize =
-  (...allowedRoles: string[]) =>
+  (allowedRoles: string[]) =>
   (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as IUser | undefined;
     if (!user) {

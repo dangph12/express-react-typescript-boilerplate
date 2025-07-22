@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
 import CryptoJS from 'crypto-js';
-import UserModel from './userModel';
-import { apiResponse } from '~/types/apiResponse';
+import UserModel from './user-model';
+import { apiResponse } from '~/types/api-response';
 import { comparePassword } from '~/utils/bcrypt';
 import createHttpError from 'http-errors';
 

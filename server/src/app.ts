@@ -7,8 +7,8 @@ import connectDB from './configs/db';
 import router from './routes/router';
 import passport from 'passport';
 import configurePassport from './utils/passport';
-import { apiResponse } from './types/apiResponse';
-import { errorHandler } from './middleware/errorHandler';
+import { apiResponse } from './types/api-response';
+import { errorHandler } from './middleware/error-handler';
 
 dotenv.config();
 

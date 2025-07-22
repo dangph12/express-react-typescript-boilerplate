@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import UserModel from '../user/userModel';
+import UserModel from '../user/user-model';
 import { generateToken, verifyRefreshToken } from '~/utils/jwt';
 import { comparePassword } from '~/utils/bcrypt';
-import { apiResponse } from '~/types/apiResponse';
+import { apiResponse } from '~/types/api-response';
 import createHttpError from 'http-errors';
 
 const authController = {

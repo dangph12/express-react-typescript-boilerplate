@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import createHttpError from 'http-errors';
-import { IUser } from '~/modules/user/user-model';
+import { IUser } from '~/modules/user/user-type';
 
-export const authorize =
+const authorize =
   (allowedRoles: string[]) =>
   (req: Request, res: Response, next: NextFunction) => {
-    const user = req.user as IUser | undefined;
-    if (!user) {
+    if (!req.user) {
       throw createHttpError(401, 'Unauthenticated');
     }
+
+    const user = req.user as IUser;
 
     if (!allowedRoles.includes(user.role)) {
       throw createHttpError(403, 'Forbidden');
@@ -16,3 +17,5 @@ export const authorize =
 
     next();
   };
+
+export default authorize;

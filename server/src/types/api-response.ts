@@ -4,7 +4,7 @@ export interface ApiResponseType<T = unknown> {
   data?: T;
 }
 
-export const apiResponse = {
+const ApiResponse = {
   success<T>(message: string, data?: T): ApiResponseType<T> {
     return {
       status: 'success',
@@ -27,3 +27,5 @@ export const apiResponse = {
     };
   }
 };
+
+export default ApiResponse;

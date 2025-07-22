@@ -7,8 +7,8 @@ import connectDB from './configs/db';
 import router from './routes/router';
 import passport from 'passport';
 import configurePassport from './utils/passport';
-import { apiResponse } from './types/api-response';
-import { errorHandler } from './middleware/error-handler';
+import apiResponse from './types/api-response';
+import errorHandler from './middleware/error-handler';
 
 dotenv.config();
 
@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true
   })
 );

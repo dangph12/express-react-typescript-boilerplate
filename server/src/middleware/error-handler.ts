@@ -1,8 +1,8 @@
 import { Request, Response, ErrorRequestHandler } from 'express';
-import { apiResponse } from '~/types/api-response';
+import apiResponse from '~/types/api-response';
 import isHttpError from 'http-errors';
 
-export const errorHandler: ErrorRequestHandler = (
+const errorHandler: ErrorRequestHandler = (
   err: isHttpError.HttpError | Error,
   req: Request,
   res: Response
@@ -22,3 +22,5 @@ export const errorHandler: ErrorRequestHandler = (
 
   res.status(500).json(apiResponse.error(message));
 };
+
+export default errorHandler;

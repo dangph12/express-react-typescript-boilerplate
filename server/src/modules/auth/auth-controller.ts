@@ -15,6 +15,9 @@ const AuthController = {
   },
   loginByGoogle: async (req: Request, res: Response) => {
     return res.status(200).json({ user: req.user });
+  },
+  loginByFacebook: async (req: Request, res: Response) => {
+    return res.status(200).json({ user: req.user });
   }
 };
 

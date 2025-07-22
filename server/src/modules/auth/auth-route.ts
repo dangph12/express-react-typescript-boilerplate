@@ -33,4 +33,19 @@ router.get(
   asyncHandler(AuthController.loginByGoogle)
 );
 
+// TODO: Get email from facebook profile
+router.get(
+  '/facebook',
+  passport.authenticate('facebook', { scope: ['public_profile'] })
+);
+
+router.get(
+  '/facebook/callback',
+  passport.authenticate('facebook', {
+    session: false,
+    failureRedirect: '/login'
+  }),
+  asyncHandler(AuthController.loginByFacebook)
+);
+
 export default router;

@@ -1,21 +1,29 @@
 import express, { Router } from 'express';
 import asyncHandler from '~/utils/async-handler';
-import { userController } from './user-controller';
+import UserController from './user-controller';
+import validate from '~/middleware/validate';
+import UserValidationSchema from './user-validation';
 
 const router: Router = express.Router();
 
-router.get('/', asyncHandler(userController.list));
-router.get('/:id', asyncHandler(userController.show));
+// In list method, you can implement pagination, sorting, and filtering logic
+router.get('/', asyncHandler(UserController.find));
 
-router.post('/', asyncHandler(userController.create));
+// router.post(
+//   '/',
+//   validate(userValidationSchema.shape),
+//   asyncHandler(UserController.create)
+// );
 
-router.put('/:id', asyncHandler(userController.update));
+// router.get('/:id', asyncHandler(UserController.findById));
 
-router.patch('/password/:id', asyncHandler(userController.updatePassword));
+// // For update, because some fields are optional, we use partial validation
+// router.patch(
+//   '/:id',
+//   validate(userValidationSchema.partial().shape),
+//   asyncHandler(UserController.update)
+// );
 
-router.patch('/avatar/:id', asyncHandler(userController.updateAvatarUrl));
-router.patch('/cover/:id', asyncHandler(userController.updateCoverUrl));
+// router.delete('/:id', asyncHandler(UserController.remove));
 
-router.delete('/:id', asyncHandler(userController.remove));
-
-export default router as Router;
+export default router;

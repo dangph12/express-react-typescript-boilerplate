@@ -1,67 +1,18 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { hashPassword } from '~/utils/bcrypt';
-// Line removed as it is unused.
+import { model, Schema } from 'mongoose';
+import { IUser } from './user-type';
 
-export interface IUser extends Document {
-  fullName: string;
-  username: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-  avatarUrl?: string;
-  coverUrl?: string;
-  role: string;
-  addresses?: mongoose.Types.ObjectId[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const userSchema = new Schema<IUser>(
+const UserSchema = new Schema<IUser>(
   {
-    fullName: { type: String, required: true },
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      minlength: 3,
-      maxlength: 30
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      lowercase: true,
-      match: [/\S+@\S+\.\S+/, 'Please use a valid email address']
-    },
-    phoneNumber: {
-      type: String,
-      required: true,
-      match: [/^\d{10,11}$/, 'Please enter a valid phone number']
-    },
-    password: {
-      type: String,
-      required: true,
-      minlength: [6, 'Password must be more than 6 characters long']
-    },
-    role: {
-      type: String,
-      required: true,
-      enum: ['admin', 'customer', 'shop']
-    },
-    avatarUrl: { type: String, default: '' },
-    coverUrl: { type: String, default: '' },
-    addresses: [{ type: Schema.Types.ObjectId, ref: 'Address' }]
+    email: { type: String, lowercase: true, unique: true, sparse: true },
+    name: { type: String, required: true },
+    avatar: { type: String, default: '' },
+    gender: { type: String },
+    role: { type: String, required: true, enum: ['user', 'admin'] },
+    providers: [{ type: String, required: true }],
+    isActive: { type: Boolean, default: true }
   },
   { timestamps: true }
 );
 
-userSchema.pre<IUser>('save', async function (next) {
-  if (this.isModified('password')) {
-    this.password = await hashPassword(this.password);
-  }
-  next();
-});
-
-export default mongoose.model<IUser>('User', userSchema);
+const User = model<IUser>('User', UserSchema);
+export default User;

@@ -1,6 +1,6 @@
 import userService from './user-service';
 import { Request, Response } from 'express';
-import apiResponse from '~/types/api-response';
+import ApiResponse from '~/types/api-response';
 
 const UserController = {
   find: async (req: Request, res: Response) => {
@@ -14,7 +14,7 @@ const UserController = {
     });
     return res
       .status(200)
-      .json(apiResponse.success('Users retrieved successfully', users));
+      .json(ApiResponse.success('Users retrieved successfully', users));
   }
 };
 

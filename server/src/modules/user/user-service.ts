@@ -31,7 +31,7 @@ const UserService = {
     });
 
     if (!users || users.length === 0) {
-      throw createHttpError(404, 'No users found');
+      throw createHttpError(404, 'Not found users');
     }
 
     return users;

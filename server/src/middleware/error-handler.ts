@@ -1,5 +1,5 @@
 import { Request, Response, ErrorRequestHandler } from 'express';
-import apiResponse from '~/types/api-response';
+import ApiResponse from '~/types/api-response';
 import isHttpError from 'http-errors';
 
 const errorHandler: ErrorRequestHandler = (
@@ -11,7 +11,7 @@ const errorHandler: ErrorRequestHandler = (
 
   if (status >= 400 && status < 500) {
     const message = err.message || 'Client Error';
-    res.status(status).json(apiResponse.failed(message));
+    res.status(status).json(ApiResponse.failed(message));
     return;
   }
 
@@ -20,7 +20,7 @@ const errorHandler: ErrorRequestHandler = (
       ? 'Internal Server Error'
       : err.message;
 
-  res.status(500).json(apiResponse.error(message));
+  res.status(500).json(ApiResponse.error(message));
 };
 
 export default errorHandler;

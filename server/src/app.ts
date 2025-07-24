@@ -7,7 +7,7 @@ import connectDB from './configs/db';
 import router from './routes/router';
 import passport from 'passport';
 import configurePassport from './utils/passport';
-import apiResponse from './types/api-response';
+import ApiResponse from './types/api-response';
 import errorHandler from './middleware/error-handler';
 
 dotenv.config();
@@ -36,7 +36,7 @@ app.use('/api', router);
 // Not found handler
 app.use((req: Request, res: Response) => {
   const message = `API route [${req.method}] ${req.originalUrl} not found`;
-  res.status(404).json(apiResponse.failed(message));
+  res.status(404).json(ApiResponse.failed(message));
 });
 
 app.use(errorHandler);
